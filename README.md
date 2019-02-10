@@ -1,2 +1,2 @@
 # yb_leave_school
-轻应用
+在使用的时候需要配置conf中的相关配置
