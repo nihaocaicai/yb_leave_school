@@ -1,0 +1,173 @@
+{extend name="common/base"/}
+{block name="style"}
+<link rel="stylesheet" href="__STATIC__/data/css/smoothness/jquery.ui.css" type="text/css" />
+<link rel="stylesheet" type="text/css" href="__STATIC__/data/css/css.css"/>
+{/block}
+{block name="content"}
+<div class="panel">
+    <div class="panel-body">
+        <h3 style="color: #8f5f40">填写表格:</h3>
+        <hr/>
+        <div class="form-three widget-shadow">
+                <form action="{:url('index/index/insertData')}" method="POST">
+                    <!--姓名-->
+                    <div class="form-group">
+                        <label class="control-label">姓名</label>
+                        <div class="transparent">
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+                    </div>
+                    <!--年级-->
+                    <div class="form-group">
+                        <label class="control-label">年级</label>
+                        <div class="transparent">
+                            <select class="form-control" name="select_nianji">
+                                <option value={$yb_today-4}>{$yb_today-4}级</option>
+                                <option value={$yb_today-3}>{$yb_today-3}级</option>
+                                <option value={$yb_today-2}>{$yb_today-2}级</option>
+                                <option value={$yb_today-1}>{$yb_today-1}级</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--学院+班级-->
+                    <div data-toggle="distpicker" class="form-group">
+                        <label class="control-label">学院+班级</label>
+                        <div id="form1" class="transparent">
+                            <select name="select_college" class="form-control"></select>
+                            <select name="select_class" class="form-control"></select>
+                            <select name="select_class_year" class="form-control">
+                                {for start="1" end="11"}
+                                <option value={$i}>{$i}班</option>
+                                {/for}
+                            </select>
+                        </div>
+                    </div>
+                    <!--是否离校-->
+                    <div class="form-group" >
+                        <label class="control-label">是否离校</label>
+                        <div class="transparent">
+                            <label class="radio-inline">
+                                <input type="radio" name="if_leave" value="是" onclick="yes()" checked> 是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="if_leave" value="否" onclick="no()"> 否
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="if_leave">
+                    <!--离校时间-->
+                    <div class="form-group">
+                        <label class="control-label">离校时间</label>
+                        <div class="transparent">
+                        <input type="text" readonly  id="startDate" class="form-control" name="leave_time"/>
+                        </div>
+                    </div>
+                    <!--回校时间-->
+                    <div class="form-group">
+                        <label class="control-label">回校时间</label>
+                        <div class="transparent">
+                        <input type="text" readonly  id="endDate" class="form-control" name="return_time"/>
+                        </div>
+                    </div>
+                    <!--离校原因-->
+                    <div class="form-group">
+                        <label class="control-label">离校原因</label>
+                        <div class="transparent">
+                        <input id="leave_reason" type="text" class="form-control" name="leave_reason">
+                        </div>
+                    </div>
+                    <!--联系方式-->
+                    <div class="form-group">
+                        <label class="control-label">联系方式</label>
+                        <div class="transparent">
+                        <input id="telephone"type="text" class="form-control" name="telephone">
+                        </div>
+                    </div>
+                    </div>
+
+                    <!--提交-->
+                    <div class="form-group has-success transparent">
+                        <input type="submit" value="提交" class="form-control">
+                    </div>
+                </form>
+        </div>
+        <!--版权所有-->
+        <div class="footer" style="text-align:center;">
+            <p style="font-size: 12px">Copyright &copy; 2019.广财大信院易班工作室 All rights reserved.</p>
+        </div>
+        <!--版权所有-->
+    </div>
+</div>
+{/block}
+
+{block name="body"}
+<script>
+    function no()
+    {
+        document.getElementById("if_leave").style.display="none";
+        document.getElementById("startDate").value="";
+        document.getElementById("endDate").value="";
+        document.getElementById("telephone").value="";
+        document.getElementById("leave_reason").value="";
+    }
+    function yes()
+    {
+        document.getElementById("if_leave").style.display="block";
+    }
+
+    var arr_college = {$res_collegename};
+    var arr_class = {$res_classname};
+
+    onload = function() {
+        var oForm = document.getElementById('form1');
+        var oCollege = oForm.children[0];
+        var oClass = oForm.children[1];
+
+        // 添加点击 onchange 事件
+        oCollege.onchange = function() {
+            var _this = this.selectedIndex;
+            // 默认进来高度清零
+            oClass.length = 0;
+            // 指定学院下拉的高度
+            initClass(_this);
+        };
+
+        // 初始化下拉列表
+        init();
+        // init select
+        function init(){
+            var index = 0;
+            // 指定下拉的高度
+            oCollege.length = arr_college.length;
+
+            // 循环数组, 把内容写到下拉列表中去
+            for( var i = 0; i < arr_college.length; i++ ){
+                oCollege.options[i].text = arr_college[i];
+                oCollege.options[i].value = arr_college[i];
+            }
+
+            // 指定默认索引号
+            oCollege.selectedIndex = index;
+            // 指定班级下拉的高度
+            initClass(index);
+        }
+
+        // 班级下拉内容高度
+        function initClass(index){
+            // 指定班级下拉的高度
+            oClass.length = arr_class[index].length;
+
+            // 循环数组, 把内容写到下拉列表中去
+            for( var i = 0; i < arr_class[index].length; i++ ){
+                oClass.options[i].text = arr_class[index][i];
+                oClass.options[i].value = arr_class[index][i];
+            }
+        }
+    };
+</script>
+<script type="text/javascript" src="__STATIC__/data/js/jquery.js"></script>
+<script type="text/javascript" src="__STATIC__/data/js/jquery.ui.js"></script>
+<script type="text/javascript" src="__STATIC__/data/js/moment.min.js"></script>
+<script type="text/javascript" src="__STATIC__/data/js/stay.js"></script>
+{/block}

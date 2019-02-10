@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据展示</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="__STATIC__/bootstrap-3.3.7/css/bootstrap.css">
+</head>
+
+<body>
+
+<!--表格-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <hr/>
+            <table class="table">
+                            <thead>
+                            <tr>
+                                <p>年级：{$nianji}</p>
+                                <p>学院：{$collegename}</p>
+                                <p>班级：{$classname}</p>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    编号
+                                </td>
+                                <td>
+                                    班级
+                                </td>
+                                <td>
+                                    姓名
+                                </td>
+                                <td>
+                                    是否离校
+                                </td>
+                            </tr>
+                            {volist name="datas" id="vo"}
+                            <tr>
+                                <td>
+                                    {$i}
+                                </td>
+                                <td>
+                                    {$vo.yb_classname}
+                                </td>
+                                <td>
+                                    {$vo.yb_username}
+                                </td>
+                                <td>
+                                    {$vo.yb_if_leave}
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+        </div>
+    </div>
+</div>
+
+<script src="__STATIC__/jquery-3.3.1.min.js"></script>
+<script src="__STATIC__/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

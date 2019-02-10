@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8">
+    <title>后台用户信息</title>
+    <link rel="stylesheet" href="__STATIC__/bootstrap-3.3.7/css/bootstrap.css">
+    <style>
+        a:link { text-decoration: none;color: black}
+        a:visited {text-decoration: none;}
+        a:hover   {text-decoration: none;}
+        a:active  {text-decoration: none;}
+    </style>
+</head>
+
+
+<body>
+<div class="row clearfix" style="padding: 0px 20px;">
+    <div class="col-md-12 column">
+        <div class="page-header">
+            <h2>
+                <small>使用说明：超级管理员就不要设置所属学院了，不是超级管理员一定要设置所属学院，没有所属学院的请去前台信息管理那编辑学院信息</small>
+            </h2>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="page-header">
+                <h1>
+                    <small>后台用户管理</small>
+                    <a id="modal-766686" href="#modal-container-766686" data-toggle="modal" style="float: right;outline:none;">
+                        <small>添加</small>
+                    </a>
+                </h1>
+            </div>
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>用户名</th>
+                    <th>密码</th>
+                    <th>所属学院</th>
+                    <th>是否是超级管理员</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="admin_user_info" id="vo"}
+                <tr>
+                    <td>
+                        {$i}
+                    </td>
+                    <td id="{$i}" title="{$vo.username}">
+                        {$vo.username}
+                    </td>
+                    <td>
+                        {$vo.password}
+                    </td>
+                    <td>
+                        {$vo.collegename}
+                    </td>
+                    <td>
+                        {$vo.if_super_admin}
+                    </td>
+                    <td>
+                        <a href="{:url('admin/index/deleteAdminUser')}?id={$vo.id}" style="color: black">删除</a>
+                        |&nbsp;&nbsp;|
+                        <a id="modal-766685" href="#modal-container-766685" data-toggle="modal" onclick="change({$i})" style="outline:none;">修改</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="modal-container-766685" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    修改后台管理员信息
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form action="{:url('admin/index/updateAdminUser')}" method="POST">
+
+                    <!--用户名-->
+                    <div class="form-group">
+                        <label class="control-label">用户名</label>
+                        <input id="username" type="text" class="form-control" name="username" readonly>
+                    </div>
+                    <!--密码-->
+                    <div class="form-group">
+                        <label class="control-label">密码</label>
+                        <input type="text" class="form-control" name="password">
+                    </div>
+                    <!--所属学院-->
+                    <div class="form-group">
+                        <label class="control-label">所属学院</label>
+                        <select name="select_college" class="form-control">
+                            <option value="">请选择</option>
+                            {volist name="res_collegename" id="vo"}
+                            <option value={$vo}>{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <!--是否是超级管理员-->
+                    <div class="form-group" >
+                        <label class="control-label">是否是超级管理员</label>
+                        <div>
+                            <label class="radio-inline">
+                                <input type="radio" name="if_super_admin" value="是" onclick="yes()"> 是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="if_super_admin" value="否" onclick="no()" checked> 否
+                            </label>
+                        </div>
+                    </div>
+
+                    <!--提交-->
+                    <div class="form-group has-success">
+                        <input type="submit" value="提交" class="form-control">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!--添加-->
+<div class="modal fade" id="modal-container-766686" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="ModalLabel">
+                    添加后台管理员
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form action="{:url('admin/index/insertAdminUser')}" method="POST">
+
+                    <!--用户名-->
+                    <div class="form-group">
+                        <label class="control-label">用户名</label>
+                        <input type="text" class="form-control" name="username">
+                    </div>
+                    <!--密码-->
+                    <div class="form-group">
+                        <label class="control-label">密码</label>
+                        <input type="text" class="form-control" name="password">
+                    </div>
+                    <!--所属学院-->
+                    <div class="form-group">
+                        <label class="control-label">所属学院</label>
+                        <select name="select_college" class="form-control">
+                            <option value="">请选择</option>
+                            {volist name="res_collegename" id="vo"}
+                            <option value={$vo}>{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <!--是否是超级管理员-->
+                    <div class="form-group" >
+                        <label class="control-label">是否是超级管理员</label>
+                        <div>
+                            <label class="radio-inline">
+                                <input type="radio" name="if_super_admin" value="是" onclick="yes()"> 是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="if_super_admin" value="否" onclick="no()" checked> 否
+                            </label>
+                        </div>
+                    </div>
+
+                    <!--提交-->
+                    <div class="form-group has-success">
+                        <input type="submit" value="提交" class="form-control">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    function change(b) {
+        document.getElementById("username").value =document.getElementById(b).title;
+    }
+</script>
+<!--引入js文件-->
+<script src="__STATIC__/jquery-3.3.1.min.js"></script>
+<script src="__STATIC__/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

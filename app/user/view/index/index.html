@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据展示</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="__STATIC__/bootstrap-3.3.7/css/bootstrap.css">
+</head>
+
+<body>
+
+<!--表格-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <hr/>
+            <form action="{:url('user/index/shows')}" method="POST">
+                <!--年级-->
+                <div class="form-group">
+                    <label class="control-label">年级</label>
+                    <div>
+                        <select class="form-control" name="select_nianji">
+                            <option value={$yb_today-4}>{$yb_today-4}级</option>
+                            <option value={$yb_today-3}>{$yb_today-3}级</option>
+                            <option value={$yb_today-2}>{$yb_today-2}级</option>
+                            <option value={$yb_today-1}>{$yb_today-1}级</option>
+                        </select>
+                    </div>
+                </div>
+                <!--学院+班级-->
+                <div data-toggle="distpicker" class="form-group">
+                    <label class="control-label">学院+班级</label>
+                    <div id="form1">
+                        <select name="select_college" class="form-control"></select>
+                        <select name="select_class" class="form-control"></select>
+                        <select name="select_class_year" class="form-control">
+                            <option value="">请选择</option>
+                            {for start="1" end="11"}
+                            <option value={$i}>{$i}班</option>
+                            {/for}
+                        </select>
+                    </div>
+                </div>
+                <!--是否离校-->
+                <div class="form-group" >
+                    <label class="control-label">是否离校（选择否显示全部数据）</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input type="radio" name="if_leave" value="是" onclick="yes()"> 是
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="if_leave" value="否" onclick="no()" checked> 否
+                        </label>
+                    </div>
+                </div>
+                <!--提交-->
+                <div class="form-group has-success">
+                    <input type="submit" value="提交" class="form-control">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function no()
+    {
+        document.getElementById("if_leave").style.display="none";
+    }
+    function yes()
+    {
+        document.getElementById("if_leave").style.display="block";
+    }
+
+    var arr_college = {$res_collegename};
+    var arr_class = {$res_classname};
+
+    onload = function() {
+        var oForm = document.getElementById('form1');
+        var oCollege = oForm.children[0];
+        var oClass = oForm.children[1];
+
+        // 添加点击 onchange 事件
+        oCollege.onchange = function() {
+            var _this = this.selectedIndex;
+            // 默认进来高度清零
+            oClass.length = 0;
+            // 指定学院下拉的高度
+            initClass(_this);
+        };
+
+        // 初始化下拉列表
+        init();
+        // init select
+        function init(){
+            var index = 0;
+            // 指定下拉的高度
+            oCollege.length = arr_college.length;
+
+            // 循环数组, 把内容写到下拉列表中去
+            for( var i = 0; i < arr_college.length; i++ ){
+                oCollege.options[i].text = arr_college[i];
+                oCollege.options[i].value = arr_college[i];
+            }
+
+            // 指定默认索引号
+            oCollege.selectedIndex = index;
+            // 指定班级下拉的高度
+            initClass(index);
+        }
+
+        // 班级下拉内容高度
+        function initClass(index){
+            // 指定班级下拉的高度
+            oClass.length = arr_class[index].length+1;
+
+            // 循环数组, 把内容写到下拉列表中去
+            oClass.options[0].text = "请选择";
+            oClass.options[0].value = "";
+            for( var i = 1,b=0; b < arr_class[index].length; i++,b++ ){
+                oClass.options[i].text = arr_class[index][b];
+                oClass.options[i].value = arr_class[index][b];
+            }
+        }
+    };
+</script>
+<script src="__STATIC__/jquery-3.3.1.min.js"></script>
+<script src="__STATIC__/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

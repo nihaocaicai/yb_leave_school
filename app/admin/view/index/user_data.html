@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>用户数据管理</title>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/admin/jquery-easyui-1.6.7/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/admin/jquery-easyui-1.6.7/themes/icon.css" />
+    <style>
+        a:link { text-decoration:none;}
+        a:visited {text-decoration:none;}
+        #fm{
+            margin:0;
+            padding:10px 30px;
+        }
+        .ftitle{
+            font-size:14px;
+            font-weight:bold;
+            color:#666;
+            padding:5px 0;
+            margin-bottom:10px;
+            border-bottom:1px solid #ccc;
+        }
+        .fitem{
+            margin-bottom:5px;
+        }
+        .fitem label{
+            display:inline-block;
+            width:80px;
+        }
+    </style>
+    <script type="text/javascript" src="__STATIC__/admin/jquery-easyui-1.6.7/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/admin/jquery-easyui-1.6.7/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/admin/jquery-easyui-1.6.7/easyloader.js"></script>
+    <script type="text/javascript">
+        var url;
+        function removeUser(){
+            var row = $('#dg').datagrid('getSelected');
+            if (row){
+                $.messager.confirm('Confirm','你要删除这些信息吗？',function(r){
+                    if (r){
+                        var ids=[];
+                        var rows = $('#dg').datagrid('getSelections');
+                        for(var i=0; i<rows.length; i++){
+                            ids.push(rows[i].id);
+                        }
+
+                        $.post("{:url('admin/index/removeUser')}",{"array[]":ids},function(result){
+                            if (result.success){
+                                $('#dg').datagrid('reload');	// reload the user data
+                            } else {
+                                $.messager.show({	// show error message
+                                    title: 'Error',
+                                    msg: result.msg
+                                });
+                            }
+                        },'json');
+                    }
+                });
+            }
+        }
+        function removeAll(){
+                $.messager.confirm('Confirm','你要删除所有信息吗？',function(r){
+                    if (r){
+                        $.post("{:url('admin/index/removeAll')}",function(result){
+                            if (result.success){
+                                $('#dg').datagrid('reload');	// reload the user data
+                            } else {
+                                $.messager.show({	// show error message
+                                    title: 'Error',
+                                    msg: result.msg
+                                });
+                            }
+                        },'json');
+                    }
+                });
+        }
+        function newUser(){
+            $('#dlg').dialog('open').dialog('setTitle','New User');
+            $('#fm').form('clear');
+            url = "{:url('admin/index/newUser')}";
+        }
+        function editUser(){
+            var row = $('#dg').datagrid('getSelected');
+            if (row){
+                $('#dlg').dialog('open').dialog('setTitle','Edit User');
+                $('#fm').form('load',row);
+                url = "{:url('admin/index/editUser')}?id="+row.id;
+            }
+        }
+        function saveUser(){
+            $('#fm').form('submit',{
+                url: url,
+                onSubmit: function(){
+                    return $(this).form('validate');
+                },
+                success: function(result){
+                    var result = eval('('+result+')');
+                    if (result.success){
+                        $('#dlg').dialog('close');		// close the dialog
+                        $('#dg').datagrid('reload');	// reload the user data
+                    } else {
+                        $.messager.show({
+                            title: 'Error',
+                            msg: result.msg
+                        });
+                    }
+                }
+            });
+        }
+        function doSearch(){
+            $('#dg').datagrid('load',{
+                enteryear: $('#select_nianji').val(),
+                collegename: $('#collegename').val(),
+                classname: $('#classname').val(),
+                student_name: $('#student_name').val(),
+                if_leave: $('#if_leave').val()
+            });
+        }
+
+    </script>
+</head>
+
+<body>
+
+<table id="dg" title="用户数据" class="easyui-datagrid"
+       url="{:url('admin/index/getUserDatas')}"
+       toolbar="#toolbar"
+       iconCls="icon-save"
+       rownumbers="true" fitColumns="true" pagination="true"
+       iconCls="icon-save">
+    <thead>
+    <tr>
+        <th field="ck" checkbox="true"></th>
+        <th field="yb_userid" width="15">易班id</th>
+        <th field="yb_enteryear" width="15">年级</th>
+        <th field="yb_collegename" width="15">学院</th>
+        <th field="yb_classname" width="15">班级</th>
+        <th field="yb_username" width="15">姓名</th>
+        <th field="yb_if_leave" width="15">是否离校</th>
+        <th field="yb_other_info">其他信息(离校时间|返校时间|原因|联系方式)</th>
+    </tr>
+    </thead>
+</table>
+<div id="toolbar" style="padding:4px">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">添加</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeUser()">删除</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeAll()">删除所有</a>
+    <div>
+        <span>年级:</span>
+        <select class="form-control" name="select_nianji" id="select_nianji">
+            <option value="">选择</option>
+            <option value={$yb_today-4}>{$yb_today-4}级</option>
+            <option value={$yb_today-3}>{$yb_today-3}级</option>
+            <option value={$yb_today-2}>{$yb_today-2}级</option>
+            <option value={$yb_today-1}>{$yb_today-1}级</option>
+        </select>
+
+        <span>学院:</span>
+        <input id="collegename" style="line-height:20px;border:1px solid #ccc">
+
+        <span>班级:</span>
+        <input id="classname" style="line-height:20px;border:1px solid #ccc">
+
+        <span>姓名:</span>
+        <input id="student_name" style="line-height:20px;border:1px solid #ccc">
+
+        <span>是否离校:</span>
+        <select class="form-control" name="select_if_leave" id="if_leave">
+            <option value="">选择</option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+        </select>
+
+        <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">查找</a>
+    </div>
+</div>
+
+<div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
+     closed="true" buttons="#dlg-buttons">
+    <div class="ftitle">添加用户离校返校信息</div>
+    <form id="fm" method="post" novalidate>
+        <div class="fitem">
+            <label>易班id:</label>
+            <input name="yb_userid" class="easyui-validatebox">
+        </div>
+        <div class="fitem">
+            <label>年级:</label>
+            <input name="yb_enteryear" class="easyui-validatebox">
+        </div>
+        <div class="fitem">
+            <label>学院:</label>
+            <input name="yb_collegename" class="easyui-validatebox">
+        </div>
+        <div class="fitem">
+            <label>姓名:</label>
+            <input name="yb_username" class="easyui-validatebox">
+        </div>
+        <div class="fitem">
+            <label>班级:</label>
+            <input name="yb_classname" class="easyui-validatebox">
+        </div>
+        <div class="fitem">
+            <label>是否离校:</label>
+            <input name="yb_if_leave" class="easyui-validatebox">
+        </div>
+        <div class="fitem">
+            <label>离校时间:</label>
+            <input name="leave_time" class="easyui-validatebox">
+        </div>
+        <div class="fitem">
+            <label>返校时间:</label>
+            <input name="return_time" class="easyui-validatebox">
+        </div>
+        <div class="fitem">
+            <label>离校原因:</label>
+            <input name="leave_reason" class="easyui-validatebox">
+        </div>
+        <div class="fitem">
+            <label>联系方式:</label>
+            <input name="telephone" class="easyui-validatebox">
+        </div>
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a>
+</div>
+
+</body>
+</html>

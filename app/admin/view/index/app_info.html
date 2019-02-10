@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8">
+    <title>更新前台提示信息</title>
+    <!--引入bootstrap-->
+    <link rel="stylesheet" href="__STATIC__/bootstrap-3.3.7/css/bootstrap.css">
+    <style>
+        a:link { text-decoration: none;color: black}
+        a:visited {text-decoration: none;}
+        a:hover   {text-decoration: none;}
+        a:active  {text-decoration: none;}
+    </style>
+</head>
+
+
+<body>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="page-header">
+                <h1>
+                    <small>编辑前台提示信息</small>
+                    <a id="modal-766685" href="#modal-container-766685" data-toggle="modal" style="float: right; outline:none;">
+                        <small>修改</small>
+                    </a>
+                </h1>
+            </div>
+            <div class="panel-body">
+                <p><span>统计主题：</span>{$yb_zhuti}</p>
+                <hr/>
+                <p><span>放假时间：</span>{$yb_fangjia_time}</p>
+                <hr/>
+                <p><span>返校时间：</span>{$yb_fanxiao_time}</p>
+                <hr/>
+                <p><span>离校返校统计截止时间：</span>{$yb_jiezhi_time}</p>
+                <hr/>
+                <p><span>放假注意事项：</span>{$yb_write_info}</p>
+                <hr/>
+                <p><span>填写注意事项：</span>{$yb_fangjia_info}</p>
+                <hr/>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-container-766685" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    修改前台提示信息
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form action="{:url('admin/index/updateAppInfo')}" method="POST">
+
+                    <!--统计主题-->
+                    <div class="form-group">
+                            <label class="control-label">统计主题</label>
+                            <input type="text" class="form-control" name="title">
+                    </div>
+                    <!--放假时间-->
+                    <div class="form-group">
+                            <label class="control-label">放假时间</label>
+                            <input type="text" class="form-control" name="holiday_time">
+                    </div>
+                    <!--放校时间-->
+                    <div class="form-group">
+                            <label class="control-label">返校时间</label>
+                            <input type="text" class="form-control" name="return_time">
+                    </div>
+                    <!--统计截止时间-->
+                    <div class="form-group">
+                            <label class="control-label">离校返校统计截止时间</label>
+                            <input type="text" class="form-control" name="deadline">
+                    </div>
+                    <!--放假注意事项-->
+                    <div class="form-group">
+                        <label class="control-label">放假注意事项</label>
+                        <input type="text" class="form-control" name="holiday_attention">
+                    </div>
+                    <!--填写注意事项-->
+                    <div class="form-group">
+                        <label class="control-label">填写注意事项</label>
+                        <input type="text" class="form-control" name="write_attention">
+                    </div>
+
+                    <!--提交-->
+                    <div class="form-group has-success">
+                        <input type="submit" value="提交" class="form-control">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!--引入js文件-->
+<script src="__STATIC__/jquery-3.3.1.min.js"></script>
+<script src="__STATIC__/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

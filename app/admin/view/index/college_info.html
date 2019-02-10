@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8">
+    <title>学院信息</title>
+    <link rel="stylesheet" href="__STATIC__/bootstrap-3.3.7/css/bootstrap.css">
+    <style>
+        a:link { text-decoration: none;color: black}
+        a:visited {text-decoration: none;}
+        a:hover   {text-decoration: none;}
+        a:active  {text-decoration: none;}
+    </style>
+  </head>
+
+
+<body>
+<div class="row clearfix" style="padding: 0px 20px;">
+    <div class="col-md-12 column">
+        <div class="page-header">
+            <h2>
+                <small>使用说明：编辑各学院的各专业时各专业之间一定要用|(竖线分割)</small>
+            </h2>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="page-header">
+                <h1>
+                    <small>编辑学院信息</small>
+                    <a id="modal-766686" href="#modal-container-766686" data-toggle="modal" style="float: right;outline:none;">
+                    <small>添加</small>
+                    </a>
+                </h1>
+            </div>
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>学院</th>
+                    <th>专业</th>
+                    <th>状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="college_info" id="vo"}
+                <tr>
+                    <td>
+                        {$i}
+                    </td>
+                    <td id="{$i}" title="{$vo.yb_collegename}">
+                        {$vo.yb_collegename}
+                    </td>
+                    <td>
+                        {$vo.yb_classname}
+                    </td>
+                    <td>
+                        <a href="{:url('admin/index/deleteCollegeInfo')}?id={$vo.id}" style="outline:none; color: black">删除</a>
+                        |&nbsp;&nbsp;|
+                        <a id="modal-766685" href="#modal-container-766685" data-toggle="modal" onclick="change({$i})" style="outline:none;">修改</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--修改-->
+<div class="modal fade" id="modal-container-766685" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    修改学院信息
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form action="{:url('admin/index/updateCollegeInfo')}" method="POST">
+
+                    <!--学院-->
+                    <div class="form-group">
+                        <label class="control-label">学院</label>
+                        <input id="college" type="text" class="form-control" name="collegename" readonly>
+                    </div>
+                    <!--专业-->
+                    <div class="form-group">
+                        <label class="control-label">专业(专业之间用|分割)</label>
+                        <input type="text" class="form-control" name="classname">
+                    </div>
+                    <!--提交-->
+                    <div class="form-group has-success">
+                        <input type="submit" value="提交" class="form-control">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!--添加-->
+<div class="modal fade" id="modal-container-766686" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="ModalLabel">
+                    添加学院信息
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form action="{:url('admin/index/insertCollegeInfo')}" method="POST">
+
+                    <!--学院-->
+                    <div class="form-group">
+                        <label class="control-label">学院</label>
+                        <input type="text" class="form-control" name="collegename">
+                    </div>
+                    <!--专业-->
+                    <div class="form-group">
+                        <label class="control-label">专业(专业之间用|分割)</label>
+                        <input type="text" class="form-control" name="classname">
+                    </div>
+                    <!--提交-->
+                    <div class="form-group has-success">
+                        <input type="submit" value="提交" class="form-control">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    function change(b) {
+        document.getElementById("college").value =document.getElementById(b).title;
+    }
+</script>
+<!--引入js文件-->
+<script src="__STATIC__/jquery-3.3.1.min.js"></script>
+<script src="__STATIC__/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
