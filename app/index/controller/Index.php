@@ -79,7 +79,7 @@ class Index extends Controller{
                 'yb_exp'=> $arr1["info"]['yb_exp'],
                 'yb_money'=> $arr1["info"]['yb_money'],
                 'yb_userid'=> $arr1["info"]['yb_userid'],
-                'username' =>'请先在Forms填写表格',
+                'username' =>'请先在表单填写表格',
                 'yb_enteryear' => '',
                 'yb_collegename' =>'',
                 'yb_classname' => '',

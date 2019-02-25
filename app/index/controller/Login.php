@@ -40,7 +40,7 @@ class Login extends Controller{
             );
         }else{
             AppUser::create([
-                'yb_userid' => $_COOKIE["user_id"],
+                'yb_userid' => $arr1['info']['yb_userid'],
                 'yb_username'=>$arr1['info']['yb_username'],
                 'yb_usertoken'=>$token,
                 'yb_userhead'=>$arr1['info']['yb_userhead'],
